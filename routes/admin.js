@@ -4,22 +4,36 @@ const fs = require('fs')
 
 const rootDirectory = require('../util/path')
 
+
+//router home
 router.get('/', (req, res, next) => {
     res.sendFile(path.join(rootDirectory, 'views', 'index.html'))
 })
 
+
+//route write-message
 router.get('/write-message', (req, res, next) => {
     res.sendFile(path.join(rootDirectory, 'views', 'write-message.html'))
 })
 
+//route read-message
+router.get('/read-message', (req, res, next) => {
+    fs.readFile('lect-01.txt','utf8', (err,data)=>{
+        if (err) throw err
+        res.render('read-message', {message:data})
+    })
+    
+    // res.sendFile(path.join(rootDirectory, 'views', 'read-message.html'))
+})
+
+//route post /message (manage submit form)
 router.post('/message', (req, res, next) => {
     const message = req.body.message
     fs.writeFile('lect-01.txt', message, (err) => {
     if (err) throw err
     res.statusCode = 302
-    res.redirect('/')
+    res.redirect('/read-message')
 })
-    console.log(req.body)
 
 })
 
